@@ -21,12 +21,12 @@ RUN apt-get update && apt-get install -y \
 # Clone the Seagull source code
 RUN mkdir -p /opt/src \
     && cd /opt/src \
-    && git clone https://github.com/codeghar/Seagull.git seagull
+    && git clone https://github.com/EirikAskheim/Seagull.git seagull
 
 # Download and unpack SCTP, Socket API, and OpenSSL external libraries
 RUN mkdir -p /opt/src/seagull/seagull/trunk/src/external-lib-src \
-    && curl -fSL http://www.sctp.de/download/sctplib-1.0.15.tar.gz -o /opt/src/seagull/seagull/trunk/src/external-lib-src/sctplib-1.0.15.tar.gz \
-    && curl -fSL http://www.sctp.de/download/socketapi-2.2.8.tar.gz -o /opt/src/seagull/seagull/trunk/src/external-lib-src/socketapi-2.2.8.tar.gz \
+    && curl -fSL https://www.sctp.de/download/sctplib-1.0.15.tar.gz -o /opt/src/seagull/seagull/trunk/src/external-lib-src/sctplib-1.0.15.tar.gz \
+    && curl -fSL https://www.sctp.de/download/socketapi-2.2.8.tar.gz -o /opt/src/seagull/seagull/trunk/src/external-lib-src/socketapi-2.2.8.tar.gz \
     && curl -fSL https://www.openssl.org/source/openssl-1.0.2e.tar.gz -o /opt/src/seagull/seagull/trunk/src/external-lib-src/openssl-1.0.2e.tar.gz
 
 # Unpack and build the external libraries
