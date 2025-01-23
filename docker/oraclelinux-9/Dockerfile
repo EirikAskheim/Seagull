@@ -2,9 +2,10 @@
 FROM oraclelinux:9-slim-fips as builder
 LABEL maintainer="richard.thompson@oracle.com"
 
-RUN microdnf install -y gcc gcc-c++ make curl git glib2-devel ksh bison flex vim openssl
+RUN microdnf install -y dnf \
+    && dnf --enablerepo=ol9_codeready_builder install -y  gcc gcc-c++ make curl git glib2-devel ksh bison flex vim openssl flex-devel libtool
 
-COPY seagull /opt/src/seagull/.
+COPY seagull /opt/src/seagull/seagull
 
 RUN ls -la /opt/src/seagull/*
 
@@ -21,8 +22,8 @@ RUN cd /opt/src/seagull/seagull/trunk/src \
 && pwd \
 && ./build.ksh -target all -exec DEBUG
 
-RUN cat /root/opt/src/seagull/seagull/trunk/src/work-1.8.3/project.mk
-RUN echo **********************************************/root/opt/src/seagull/seagull/trunk/src/work-1.8.3/project.mk
+RUN cat /opt/src/seagull/seagull/trunk/src/work-1.8.3/project.mk
+RUN echo **********************************************/opt/src/seagull/seagull/trunk/src/work-1.8.3/project.mk
 
 RUN ls -la /opt/src/seagull/seagull/trunk/src/*
 
@@ -38,9 +39,9 @@ RUN microdnf update
 RUN microdnf install -y glibc-langpack-en ksh
 COPY --from=builder /root/pkg.tgz /root/pkg.tgz
 RUN tar xvf /root/pkg.tgz -C /root --strip=1 \
-&& tar xvf /root/bin.tgz -C /usr/local/bin --strip=8 \
+&& tar xvf /root/bin.tgz -C /usr/local/bin --strip=7 \
 && mkdir -p /opt/seagull \
-&& tar xvf /root/exe-env.tgz -C /opt/seagull --strip=8 \
+&& tar xvf /root/exe-env.tgz -C /opt/seagull --strip=7 \
 && mkdir -p /opt/seagull/diameter-env/logs \
 && mkdir -p /opt/seagull/h248-env/logs \
 && mkdir -p /opt/seagull/http-env/logs \
