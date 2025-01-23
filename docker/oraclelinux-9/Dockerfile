@@ -1,6 +1,6 @@
 #FROM ocr-docker-remote.artifactory.oci.oraclecorp.com/os/oraclelinux:8-slim-fips as builder
 FROM oraclelinux:9-slim-fips as builder
-LABEL maintainer="richard.thompson@oracle.com"
+LABEL org.opencontainers.image.source="https://github.com/EirikAskheim/Seagull"
 
 RUN microdnf install -y dnf \
     && dnf --enablerepo=ol9_codeready_builder install -y  gcc gcc-c++ make curl git glib2-devel ksh bison flex vim openssl flex-devel libtool
