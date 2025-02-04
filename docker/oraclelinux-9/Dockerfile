@@ -1,5 +1,4 @@
-#FROM ocr-docker-remote.artifactory.oci.oraclecorp.com/os/oraclelinux:8-slim-fips as builder
-FROM oraclelinux:9-slim-fips as builder
+FROM oraclelinux:9-slim-fips AS builder
 LABEL org.opencontainers.image.source="https://github.com/EirikAskheim/Seagull"
 
 RUN microdnf install -y dnf \
@@ -7,33 +6,33 @@ RUN microdnf install -y dnf \
 
 COPY seagull /opt/src/seagull/seagull
 
-RUN ls -la /opt/src/seagull/*
+RUN    mkdir -p /opt/src/seagull/seagull/trunk/src/external-lib-src \
+    && curl -fSL --create-dirs -o /opt/src/seagull/seagull/trunk/src/external-lib-src/sctplib-1.0.31.tar.gz  https://www.nntb.no/~dreibh/sctplib/download/sctplib-1.0.31.tar.gz \
+    && curl -fSL --create-dirs -o /opt/src/seagull/seagull/trunk/src/external-lib-src/socketapi-2.2.24.tar.gz https://www.nntb.no/~dreibh/sctplib/download/socketapi-2.2.24.tar.gz
 
-RUN mkdir -p /opt/src/seagull/seagull/trunk/src/external-lib-src \
-    && curl -fSL https://www.sctp.de/download/sctplib-1.0.15.tar.gz -o /opt/src/seagull/seagull/trunk/src/external-lib-src/sctplib-1.0.15.tar.gz \
-    && curl -fSL https://www.sctp.de/download/socketapi-2.2.8.tar.gz -o /opt/src/seagull/seagull/trunk/src/external-lib-src/socketapi-2.2.8.tar.gz \
-    && curl -fSL https://www.openssl.org/source/openssl-1.0.2e.tar.gz -o /opt/src/seagull/seagull/trunk/src/external-lib-src/openssl-1.0.2e.tar.gz
+RUN    cd /opt/src/seagull/seagull/trunk/src/external-lib-src \
+    && gunzip sctplib-1.0.31.tar.gz \
+    && tar -xvf sctplib-1.0.31.tar \
+    && cd sctplib-1.0.31 \
+    && ./configure \
+    && make \
+    && make install \
+    && cd /opt/src/seagull/seagull/trunk/src/external-lib-src \
+    && gunzip socketapi-2.2.24.tar.gz \
+    && tar -xvf socketapi-2.2.24.tar \
+    && cd socketapi-2.2.24 \
+    && ./configure \
+    && make \
+    && make install
 
 RUN cd /opt/src/seagull/seagull/trunk/src \
-&& ./build-ext-lib.ksh
-
-RUN cd /opt/src/seagull/seagull/trunk/src \
-&& ls -la * \
-&& pwd \
 && ./build.ksh -target all -exec DEBUG
-
-RUN cat /opt/src/seagull/seagull/trunk/src/work-1.8.3/project.mk
-RUN echo **********************************************/opt/src/seagull/seagull/trunk/src/work-1.8.3/project.mk
-
-RUN ls -la /opt/src/seagull/seagull/trunk/src/*
 
 RUN tar cvf /root/bin.tgz /opt/src/seagull/seagull/trunk/src/bin/* \
 && tar cvf /root/exe-env.tgz /opt/src/seagull/seagull/trunk/src/exe-env/* \
 && tar cvf /root/pkg.tgz /root/exe-env.tgz /root/bin.tgz
 
-
-#FROM ocr-docker-remote.artifactory.oci.oraclecorp.com/os/oraclelinux:8-slim-fips as distro
-FROM oraclelinux:9-slim-fips as distro
+FROM oraclelinux:9-slim-fips AS distro
 
 RUN microdnf update
 RUN microdnf install -y glibc-langpack-en ksh
