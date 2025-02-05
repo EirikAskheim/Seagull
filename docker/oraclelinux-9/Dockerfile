@@ -26,7 +26,7 @@ RUN    cd /opt/src/seagull/seagull/trunk/src/external-lib-src \
     && make install
 
 RUN cd /opt/src/seagull/seagull/trunk/src \
-&& ./build.ksh -target all -exec DEBUG
+&& ./build.ksh -target all
 
 RUN tar cvf /root/bin.tgz /opt/src/seagull/seagull/trunk/src/bin/* \
 && tar cvf /root/exe-env.tgz /opt/src/seagull/seagull/trunk/src/exe-env/* \
