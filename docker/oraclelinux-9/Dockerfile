@@ -2,7 +2,7 @@ FROM oraclelinux:9-slim-fips AS builder
 LABEL org.opencontainers.image.source="https://github.com/EirikAskheim/Seagull"
 
 RUN microdnf install -y dnf \
-    && dnf --enablerepo=ol9_codeready_builder install -y  gcc gcc-c++ make curl git glib2-devel ksh bison flex vim openssl flex-devel libtool
+    && dnf --enablerepo=ol9_codeready_builder install -y  gcc gcc-c++ make curl git glib2-devel ksh bison flex vim openssl openssl-devel flex-devel libtool
 
 COPY seagull /opt/src/seagull/seagull
 
