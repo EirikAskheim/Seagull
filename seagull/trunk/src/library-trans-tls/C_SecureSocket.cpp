@@ -17,6 +17,7 @@
  *
  */
 
+#include <openssl/ssl.h>
 #include "Utils.hpp"
 #include "C_SecureSocket.hpp"
 
@@ -297,7 +298,7 @@ C_Socket* C_SecureSocketClient::process_fd_in_progess (fd_set* P_rSet,
       }
     } else {
       m_state = E_SOCKET_STATE_READY ;
-      m_ssl->rwstate = SSL_NOTHING ;
+      // m_ssl->rwstate = SSL_NOTHING ;
       P_event->m_type = C_TransportEvent::E_TRANS_OPEN ;
     }
     P_event->m_channel_id = m_channel_id ;
